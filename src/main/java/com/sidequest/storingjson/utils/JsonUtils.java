@@ -1,9 +1,16 @@
 package com.sidequest.storingjson.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.sidequest.storingjson.domain.User;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class JsonUtils {
+
+    public User getUserFromJson() {
+
+        return JSON.parseObject(getRandomJson(), User.class);
+    }
 
     public String getRandomJson() {
 

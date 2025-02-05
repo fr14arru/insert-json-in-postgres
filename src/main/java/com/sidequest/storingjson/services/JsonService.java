@@ -1,11 +1,12 @@
 package com.sidequest.storingjson.services;
 
+import com.sidequest.storingjson.domain.User;
 import com.sidequest.storingjson.entities.JsonEntity;
 import com.sidequest.storingjson.repositories.JsonRepository;
-import com.sidequest.storingjson.utils.JsonUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.instancio.Instancio;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,16 +26,15 @@ public class JsonService {
 
         for (int i = 0 ; i < 10000; i++) {
 
-            JsonEntity entity = new JsonEntity();
-            entity.setJson(JsonUtils.getRandomJson());
+            JsonEntity jsonEntity = new JsonEntity();
+            jsonEntity.setUser(Instancio.create(User.class));
 
-            randomJsonStringList.add(entity);
+            randomJsonStringList.add(jsonEntity);
         }
 
+        log.info("Starting to store 10000 random JSON strings");
 
         long startTime = System.currentTimeMillis();
-
-        log.info("Starting to store 10000 random JSON strings");
 
         jsonRepository.saveAll(randomJsonStringList);
 

@@ -1,0 +1,12 @@
+2025-02-05T15:53:06.590+01:00  INFO 27668 --- [storingjson] [           main] c.s.storingjson.services.JsonService     : Starting to store 100000 random JSONB objects
+2025-02-05T15:54:17.704+01:00  INFO 27668 --- [storingjson] [           main] c.s.storingjson.services.JsonService     : Finished storing 100000 random JSONB objects in 71114 milliseconds
+2025-02-05T15:54:31.901+01:00  INFO 27668 --- [storingjson] [           main] c.s.storingjson.services.JsonService     : Starting to store 100000 random JSON strings
+2025-02-05T15:55:15.440+01:00  INFO 27668 --- [storingjson] [           main] c.s.storingjson.services.JsonService     : Finished storing 100000 random JSON strings in 43539 milliseconds
+2025-02-05T15:55:25.684+01:00  INFO 27668 --- [storingjson] [           main] c.s.storingjson.services.JsonService     : Starting to store 100000 random JSON objects
+2025-02-05T15:56:27.195+01:00  INFO 27668 --- [storingjson] [           main] c.s.storingjson.services.JsonService     : Finished storing 100000 random JSON objects in 61512 milliseconds
+2025-02-05T16:42:44.043+01:00  INFO 38038 --- [storingjson] [           main] c.s.storingjson.services.JsonService     : Starting to store 100000 random bytearray objects
+2025-02-05T16:43:33.713+01:00  INFO 38038 --- [storingjson] [           main] c.s.storingjson.services.JsonService     : Finished storing 100000 random bytearray objects in 49670 milliseconds
+
+2025-02-05T17:04:11.930+01:00  INFO 41004 --- [storingjson] [           main] c.s.storingjson.services.JsonService     : Finished compressing 100000 random bytearray compressed objects in 26203 milliseconds
+2025-02-05T17:04:11.930+01:00  INFO 41004 --- [storingjson] [           main] c.s.storingjson.services.JsonService     : Starting to store 100000 random bytearray compressed objects
+2025-02-05T17:04:34.572+01:00  INFO 41004 --- [storingjson] [           main] c.s.storingjson.services.JsonService     : Finished storing 100000 random bytearray compressed objects in 22640 milliseconds

@@ -1,5 +1,6 @@
 package com.sidequest.storingjson.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,13 +12,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "json_entity")
-public class JsonEntity {
+@Table(name = "json_entity_raw_text")
+public class JsonEntityRawText {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // TODO - column treatment
+    @Column(columnDefinition = "text")
     private String json;
 }

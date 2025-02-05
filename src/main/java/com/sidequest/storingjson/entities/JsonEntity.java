@@ -1,5 +1,6 @@
 package com.sidequest.storingjson.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +19,6 @@ public class JsonEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // TODO - column treatment
+    @Column(columnDefinition = "text")
     private String json;
 }

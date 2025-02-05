@@ -24,7 +24,7 @@ public class JsonEntity {
     private Long id;
 
     @Convert(converter = UserJsonConverter.class)
-    @Column(name = "\"user\"", columnDefinition = "jsonb")
-    @ColumnTransformer(write = "?::jsonb")
+    @Column(name = "\"user\"", columnDefinition = "json")
+    @ColumnTransformer(write = "?::json")
     private User user;
 }

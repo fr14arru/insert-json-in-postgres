@@ -1,7 +1,8 @@
 DO $$
    DECLARE
-
-    original_jsonb jsonb := '{
+        start_time TIMESTAMP;
+        end_time TIMESTAMP;
+       original_json jsonb := '{
     "product": {
         "productId": "81933",
         "productType": {
@@ -328,10 +329,17 @@ DO $$
        all_jsons jsonb[] := '{}';
 
     BEGIN
-     FOR i IN 1..10000 LOOP
-         all_jsons := array_append(all_jsons, original_jsonb);
+     FOR i IN 1..50000 LOOP
+         all_jsons := array_append(all_jsons, original_json);
          END loop;
 
+     start_time := clock_timestamp();
+    RAISE NOTICE 'Start insert: %', start_time;
+
     INSERT INTO json_as_jsonb(json) select unnest(all_jsons);
+
+     end_time := clock_timestamp();
+    RAISE NOTICE 'End insert: %', end_time;
+    RAISE NOTICE 'Total time: % ms', (EXTRACT(EPOCH FROM end_time) - EXTRACT(EPOCH FROM start_time)) * 1000;
 
 END    $$;

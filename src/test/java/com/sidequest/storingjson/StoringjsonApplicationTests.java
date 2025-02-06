@@ -1,7 +1,11 @@
 package com.sidequest.storingjson;
 
 import com.sidequest.storingjson.domain.User;
-import com.sidequest.storingjson.services.JsonService;
+import com.sidequest.storingjson.services.JsonEntityByteArrayCompressedService;
+import com.sidequest.storingjson.services.JsonEntityJsonService;
+import com.sidequest.storingjson.services.JsonEntityJsonbService;
+import com.sidequest.storingjson.services.JsonEntityRawTextService;
+import com.sidequest.storingjson.services.JsonEntityByteArrayService;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -44,14 +48,26 @@ class StoringjsonApplicationTests {
     }
 
     @Autowired
-    JsonService jsonService;
+    JsonEntityRawTextService jsonEntityRawTextService;
+
+    @Autowired
+    JsonEntityJsonbService jsonEntityJsonbService;
+
+    @Autowired
+    JsonEntityJsonService jsonEntityJsonService;
+
+    @Autowired
+    JsonEntityByteArrayService jsonEntityByteArrayService;
+
+    @Autowired
+    JsonEntityByteArrayCompressedService jsonEntityByteArrayCompressedService;
 
     @Test
     void test_saveAll10000JsonEntitiesRawText() {
 
         List<User> users = buildUsers(100000);
 
-        jsonService.saveAllRawText(users);
+        jsonEntityRawTextService.saveAllRawText(users);
     }
 
     @Test
@@ -59,7 +75,7 @@ class StoringjsonApplicationTests {
 
         List<User> users = buildUsers(100000);
 
-        jsonService.saveAllJsonb(users);
+        jsonEntityJsonbService.saveAllJsonb(users);
     }
 
     @Test
@@ -67,7 +83,7 @@ class StoringjsonApplicationTests {
 
         List<User> users = buildUsers(100000);
 
-        jsonService.saveAllJson(users);
+        jsonEntityJsonService.saveAllJson(users);
     }
 
     @Test
@@ -75,7 +91,7 @@ class StoringjsonApplicationTests {
 
         List<User> users = buildUsers(100000);
 
-        jsonService.saveAllRawTextByteArray(users);
+        jsonEntityByteArrayService.saveAllRawTextByteArray(users);
     }
 
     @Test
@@ -83,7 +99,7 @@ class StoringjsonApplicationTests {
 
         List<User> users = buildUsers(100000);
 
-        jsonService.saveAllRawTextByteArrayCompressed(users);
+        jsonEntityByteArrayCompressedService.saveAllRawTextByteArrayCompressed(users);
     }
 
     private List<User> buildUsers(Integer limit) {

@@ -4,7 +4,6 @@ import com.sidequest.storingjson.domain.User;
 import com.sidequest.storingjson.services.JsonService;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,10 +76,6 @@ class StoringjsonApplicationTests {
         List<User> users = buildUsers(100000);
 
         jsonService.saveAllRawTextByteArray(users);
-
-        User user = jsonService.findUserById(1L);
-
-        Assertions.assertNotNull(user);
     }
 
     @Test

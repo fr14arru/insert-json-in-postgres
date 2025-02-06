@@ -39,6 +39,8 @@ public class JsonService {
 
         List<JsonEntityRawText> entities = new ArrayList<>();
 
+        long startTimeBuildingEntities = System.currentTimeMillis();
+
         users.forEach(user -> {
 
             JsonEntityRawText jsonEntityRawText = new JsonEntityRawText();
@@ -47,9 +49,15 @@ public class JsonService {
             entities.add(jsonEntityRawText);
         });
 
+        long endTimeBuildingEntities = System.currentTimeMillis();
+
+        long resultTimeBuildingEntities = endTimeBuildingEntities - startTimeBuildingEntities;
+
+        log.info("Finished building {} random raw text objects in {} milliseconds", entities.size(), resultTimeBuildingEntities);
+
         long startTime = System.currentTimeMillis();
 
-        log.info("Starting to store {} random JSON objects", entities.size());
+        log.info("Starting to store {} random raw text objects", entities.size());
 
         jsonEntityRawTextRepository.saveAll(entities);
 
@@ -57,12 +65,14 @@ public class JsonService {
 
         long resultTime = endTime - startTime;
 
-        log.info("Finished storing {} random JSON objects in {} milliseconds", entities.size(), resultTime);
+        log.info("Finished storing {} random raw text objects in {} milliseconds", entities.size(), resultTime);
     }
 
     public void saveAllJsonb(List<User> users) {
 
         List<JsonEntityJsonb> entities = new ArrayList<>();
+
+        long startTimeBuildingEntities = System.currentTimeMillis();
 
         users.forEach(user -> {
 
@@ -72,9 +82,15 @@ public class JsonService {
             entities.add(jsonEntityJsonb);
         });
 
+        long endTimeBuildingEntities = System.currentTimeMillis();
+
+        long resultTimeBuildingEntities = endTimeBuildingEntities - startTimeBuildingEntities;
+
+        log.info("Finished building {} random JSONB objects in {} milliseconds", entities.size(), resultTimeBuildingEntities);
+
         long startTime = System.currentTimeMillis();
 
-        log.info("Starting to store {} random JSON objects", entities.size());
+        log.info("Starting to store {} random JSONB objects", entities.size());
 
         jsonEntityJsonbRepository.saveAll(entities);
 
@@ -82,12 +98,14 @@ public class JsonService {
 
         long resultTime = endTime - startTime;
 
-        log.info("Finished storing {} random JSON objects in {} milliseconds", entities.size(), resultTime);
+        log.info("Finished storing {} random JSONB objects in {} milliseconds", entities.size(), resultTime);
     }
 
     public void saveAllJson(List<User> users) {
 
         List<JsonEntityJson> entities = new ArrayList<>();
+
+        long startTimeBuildingEntities = System.currentTimeMillis();
 
         users.forEach(user -> {
 
@@ -96,6 +114,12 @@ public class JsonService {
 
             entities.add(jsonEntityJson);
         });
+
+        long endTimeBuildingEntities = System.currentTimeMillis();
+
+        long resultTimeBuildingEntities = endTimeBuildingEntities - startTimeBuildingEntities;
+
+        log.info("Finished building {} random JSON objects in {} milliseconds", entities.size(), resultTimeBuildingEntities);
 
         long startTime = System.currentTimeMillis();
 
@@ -113,6 +137,8 @@ public class JsonService {
     public void saveAllRawTextByteArray(List<User> users) {
 
         List<JsonEntityByteArray> entities = new ArrayList<>();
+
+        long startTimeBuildingEntities = System.currentTimeMillis();
 
         users.forEach(user -> {
 
@@ -133,6 +159,12 @@ public class JsonService {
                 log.error("Error serializing user object", e);
             }
         });
+
+        long endTimeBuildingEntities = System.currentTimeMillis();
+
+        long resultTimeBuildingEntities = endTimeBuildingEntities - startTimeBuildingEntities;
+
+        log.info("Finished building {} random bytearray objects in {} milliseconds", entities.size(), resultTimeBuildingEntities);
 
         long startTime = System.currentTimeMillis();
 
@@ -175,7 +207,7 @@ public class JsonService {
 
         List<JsonEntityByteArray> entities = new ArrayList<>();
 
-        long startDateCompression = System.currentTimeMillis();
+        long startTimeBuildingEntities = System.currentTimeMillis();
 
         users.forEach(user -> {
 
@@ -197,11 +229,11 @@ public class JsonService {
             }
         });
 
-        long endTimeCompression = System.currentTimeMillis();
+        long endTimeBuildingEntities = System.currentTimeMillis();
 
-        long resultTimeCompression = endTimeCompression - startDateCompression;
+        long resultTimeBuildingEntities = endTimeBuildingEntities - startTimeBuildingEntities;
 
-        log.info("Finished compressing {} random bytearray objects in {} milliseconds", entities.size(), resultTimeCompression);
+        log.info("Finished building {} random bytearray compressed objects in {} milliseconds", entities.size(), resultTimeBuildingEntities);
 
         long startTime = System.currentTimeMillis();
 

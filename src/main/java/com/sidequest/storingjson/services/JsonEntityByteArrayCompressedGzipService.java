@@ -28,7 +28,7 @@ public class JsonEntityByteArrayCompressedGzipService {
     private final JsonEntityByteArrayCompressedGzipRepository jsonEntityByteArrayCompressedGzipRepository;
 
     @Transactional
-    public void saveAllRawTextByteArrayCompressed(List<User> users) {
+    public void saveAll(List<User> users) {
 
         List<JsonEntityByteArrayCompressedGzip> entities = new ArrayList<>();
 

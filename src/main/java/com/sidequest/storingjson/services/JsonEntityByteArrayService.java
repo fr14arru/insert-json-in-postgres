@@ -15,7 +15,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.zip.GZIPOutputStream;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class JsonEntityByteArrayService {
     private final JsonEntityByteArrayRepository jsonEntityByteArrayRepository;
 
     @Transactional
-    public void saveAllRawTextByteArray(List<User> users) {
+    public void saveAll(List<User> users) {
 
         List<JsonEntityByteArray> entities = new ArrayList<>();
 
@@ -58,8 +57,6 @@ public class JsonEntityByteArrayService {
         log.info("Finished building {} random bytearray objects in {} milliseconds", entities.size(), resultTimeBuildingEntities);
 
         long startTime = System.currentTimeMillis();
-
-        log.info("Starting to store {} random bytearray objects", entities.size());
 
         jsonEntityByteArrayRepository.saveAll(entities);
 

@@ -20,7 +20,7 @@ public class JsonEntityRawTextService {
     private final JsonEntityRawTextRepository jsonEntityRawTextRepository;
 
     @Transactional
-    public void saveAllRawText(List<User> users) {
+    public void saveAll(List<User> users) {
 
         List<JsonEntityRawText> entities = new ArrayList<>();
 
@@ -41,8 +41,6 @@ public class JsonEntityRawTextService {
         log.info("Finished building {} random raw text objects in {} milliseconds", entities.size(), resultTimeBuildingEntities);
 
         long startTime = System.currentTimeMillis();
-
-        log.info("Starting to store {} random raw text objects", entities.size());
 
         jsonEntityRawTextRepository.saveAll(entities);
 

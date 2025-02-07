@@ -2,7 +2,7 @@ package com.sidequest.storingjson;
 
 import com.sidequest.storingjson.domain.User;
 import com.sidequest.storingjson.services.JsonEntityByteArrayCompressedGzipService;
-import com.sidequest.storingjson.services.JsonEntityByteArrayCompressedLz4Service;
+import com.sidequest.storingjson.services.JsonEntityByteArrayCompressedSnappyService;
 import com.sidequest.storingjson.services.JsonEntityByteArrayCompressedZstdService;
 import com.sidequest.storingjson.services.JsonEntityByteArrayService;
 import com.sidequest.storingjson.services.JsonEntityJsonService;
@@ -32,9 +32,13 @@ class StoringjsonApplicationTests {
             .withUsername("root")
             .withPassword("root");
 
+    private static List<User> usersList;
+
     @BeforeAll
     static void beforeAll() {
         postgres.start();
+
+        usersList = buildUsers(100000);
     }
 
     @AfterAll
@@ -66,7 +70,7 @@ class StoringjsonApplicationTests {
     JsonEntityByteArrayCompressedGzipService jsonEntityByteArrayCompressedGzipService;
 
     @Autowired
-    JsonEntityByteArrayCompressedLz4Service jsonEntityByteArrayCompressedLz4Service;
+    JsonEntityByteArrayCompressedSnappyService jsonEntityByteArrayCompressedSnappyService;
 
     @Autowired
     JsonEntityByteArrayCompressedZstdService jsonEntityByteArrayCompressedZstdService;
@@ -74,68 +78,59 @@ class StoringjsonApplicationTests {
     @Test
     void test_saveAll10000JsonEntitiesRawText() {
 
-        List<User> users = buildUsers(100000);
-
-        jsonEntityRawTextService.saveAllRawText(users);
+        jsonEntityRawTextService.saveAll(usersList);
     }
 
     @Test
     void test_saveAll10000JsonEntitiesJsonb() {
 
-        List<User> users = buildUsers(100000);
-
-        jsonEntityJsonbService.saveAllJsonb(users);
+        jsonEntityJsonbService.saveAll(usersList);
     }
 
     @Test
     void test_saveAll10000JsonEntitiesJson() {
 
-        List<User> users = buildUsers(100000);
-
-        jsonEntityJsonService.saveAllJson(users);
+        jsonEntityJsonService.saveAll(usersList);
     }
 
     @Test
     void test_saveAll10000JsonEntitiesByteArray() {
 
-        List<User> users = buildUsers(100000);
-
-        jsonEntityByteArrayService.saveAllRawTextByteArray(users);
+        jsonEntityByteArrayService.saveAll(usersList);
     }
 
     @Test
     void test_saveAll10000JsonEntitiesByteArrayCompressedGzip() {
 
-        List<User> users = buildUsers(100000);
-
-        jsonEntityByteArrayCompressedGzipService.saveAllRawTextByteArrayCompressed(users);
+        jsonEntityByteArrayCompressedGzipService.saveAll(usersList);
 
         List<User> usersResult = jsonEntityByteArrayCompressedGzipService.findAll();
 
         Assertions.assertNotNull(usersResult);
     }
 
-    @Test
-    void test_saveAll10000JsonEntitiesByteArrayCompressedLz4() {
-
-        List<User> users = buildUsers(100000);
-
-        jsonEntityByteArrayCompressedLz4Service.saveAllRawTextByteArrayCompressedLz4(users);
-    }
 
     @Test
     void test_saveAll10000JsonEntitiesByteArrayCompressedZstd() {
 
-        List<User> users = buildUsers(100000);
-
-        jsonEntityByteArrayCompressedZstdService.saveAllRawTextByteArrayCompressedZstd(users);
+        jsonEntityByteArrayCompressedZstdService.saveAll(usersList);
 
         List<User> usersResult = jsonEntityByteArrayCompressedZstdService.findAll();
 
         Assertions.assertNotNull(usersResult);
     }
 
-    private List<User> buildUsers(Integer limit) {
+    @Test
+    void test_saveAll10000JsonEntitiesByteArrayCompressedSnappy() {
+
+        jsonEntityByteArrayCompressedSnappyService.saveAll(usersList);
+
+        List<User> usersResult = jsonEntityByteArrayCompressedSnappyService.findAll();
+
+        Assertions.assertNotNull(usersResult);
+    }
+
+    private static List<User> buildUsers(Integer limit) {
 
         return Instancio.of(User.class).
                 stream()

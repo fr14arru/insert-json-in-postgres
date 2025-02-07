@@ -19,7 +19,7 @@ public class JsonEntityJsonbService {
     private final JsonEntityJsonbRepository jsonEntityJsonbRepository;
 
     @Transactional
-    public void saveAllJsonb(List<User> users) {
+    public void saveAll(List<User> users) {
 
         List<JsonEntityJsonb> entities = new ArrayList<>();
 
@@ -40,8 +40,6 @@ public class JsonEntityJsonbService {
         log.info("Finished building {} random JSONB objects in {} milliseconds", entities.size(), resultTimeBuildingEntities);
 
         long startTime = System.currentTimeMillis();
-
-        log.info("Starting to store {} random JSONB objects", entities.size());
 
         jsonEntityJsonbRepository.saveAll(entities);
 

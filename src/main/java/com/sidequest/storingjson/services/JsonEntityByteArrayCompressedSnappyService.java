@@ -1,15 +1,15 @@
 package com.sidequest.storingjson.services;
 
 import com.alibaba.fastjson.JSON;
-import com.github.luben.zstd.ZstdInputStream;
-import com.github.luben.zstd.ZstdOutputStream;
 import com.sidequest.storingjson.domain.User;
-import com.sidequest.storingjson.entities.JsonEntityByteArrayCompressedZstd;
-import com.sidequest.storingjson.repositories.JsonEntityByteArrayCompressedZstdRepository;
+import com.sidequest.storingjson.entities.JsonEntityByteArrayCompressedSnappy;
+import com.sidequest.storingjson.repositories.JsonEntityByteArrayCompressedSnappyRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.xerial.snappy.SnappyInputStream;
+import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,14 +23,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class JsonEntityByteArrayCompressedZstdService {
+public class JsonEntityByteArrayCompressedSnappyService {
 
-    private final JsonEntityByteArrayCompressedZstdRepository jsonEntityByteArrayCompressedZstdRepository;
+    private final JsonEntityByteArrayCompressedSnappyRepository jsonEntityByteArrayCompressedSnappyRepository;
 
     @Transactional
     public void saveAll(List<User> users) {
 
-        List<JsonEntityByteArrayCompressedZstd> entities = new ArrayList<>();
+        List<JsonEntityByteArrayCompressedSnappy> entities = new ArrayList<>();
 
         long startTimeBuildingEntities = System.currentTimeMillis();
 
@@ -39,47 +39,45 @@ public class JsonEntityByteArrayCompressedZstdService {
             try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(JSON.toJSONBytes(user));
                  ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
 
-                zstd(byteArrayInputStream, byteArrayOutputStream);
+                snappy(byteArrayInputStream, byteArrayOutputStream);
 
-                JsonEntityByteArrayCompressedZstd jsonEntityByteArrayCompressedZstd =
-                        new JsonEntityByteArrayCompressedZstd();
-                jsonEntityByteArrayCompressedZstd.setJson(byteArrayOutputStream.toByteArray());
+                JsonEntityByteArrayCompressedSnappy jsonEntityByteArrayCompressedSnappy =
+                        new JsonEntityByteArrayCompressedSnappy();
+                jsonEntityByteArrayCompressedSnappy.setJson(byteArrayOutputStream.toByteArray());
 
-                entities.add(jsonEntityByteArrayCompressedZstd);
+                entities.add(jsonEntityByteArrayCompressedSnappy);
 
             } catch (IOException e) {
-
                 throw new RuntimeException(e);
             }
-
         });
 
         long endTimeBuildingEntities = System.currentTimeMillis();
 
         long resultTimeBuildingEntities = endTimeBuildingEntities - startTimeBuildingEntities;
 
-        log.info("Finished building {} random bytearray compressed Zstd objects in {} milliseconds", entities.size(), resultTimeBuildingEntities);
+        log.info("Finished building {} random bytearray compressed Snappy objects in {} milliseconds", entities.size(), resultTimeBuildingEntities);
 
         long startTime = System.currentTimeMillis();
 
-        jsonEntityByteArrayCompressedZstdRepository.saveAll(entities);
+        jsonEntityByteArrayCompressedSnappyRepository.saveAll(entities);
 
         long endTime = System.currentTimeMillis();
 
         long resultTime = endTime - startTime;
 
-        log.info("Finished storing {} random bytearray compressed Zstd objects in {} milliseconds", entities.size(), resultTime);
+        log.info("Finished storing {} random bytearray compressed Snappy objects in {} milliseconds", entities.size(), resultTime);
     }
 
-    private void zstd(InputStream inputStream, OutputStream outputStream) throws IOException {
+    private void snappy(InputStream inputStream, OutputStream outputStream) throws IOException {
 
-        ZstdOutputStream zstdOutputStream = new ZstdOutputStream(outputStream);
+        SnappyOutputStream snappyOutputStream = new SnappyOutputStream(outputStream);
 
         byte[] allBytes = inputStream.readAllBytes();
 
-        zstdOutputStream.write(allBytes);
+        snappyOutputStream.write(allBytes);
 
-        zstdOutputStream.close();
+        snappyOutputStream.close();
     }
 
     public List<User> findAll() {
@@ -88,13 +86,13 @@ public class JsonEntityByteArrayCompressedZstdService {
 
         long startTimeQuery = System.currentTimeMillis();
 
-        List<JsonEntityByteArrayCompressedZstd> entities = jsonEntityByteArrayCompressedZstdRepository.findAll();
+        List<JsonEntityByteArrayCompressedSnappy> entities = jsonEntityByteArrayCompressedSnappyRepository.findAll();
 
         long endTimeQuery = System.currentTimeMillis();
 
         long resultTimeQuery = endTimeQuery - startTimeQuery;
 
-        log.info("Time querying {} random bytearray compressed zstd objects in {} milliseconds", entities.size(), resultTimeQuery);
+        log.info("Time querying {} random bytearray compressed Snappy objects in {} milliseconds", entities.size(), resultTimeQuery);
 
         long startTimeMappingEntities = System.currentTimeMillis();
 
@@ -103,7 +101,7 @@ public class JsonEntityByteArrayCompressedZstdService {
             try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(entity.getJson());
                  ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
 
-                unZstd(byteArrayInputStream, byteArrayOutputStream);
+                unSnappy(byteArrayInputStream, byteArrayOutputStream);
 
                 User user = JSON.parseObject(byteArrayOutputStream.toString(StandardCharsets.UTF_8), User.class);
 
@@ -124,18 +122,18 @@ public class JsonEntityByteArrayCompressedZstdService {
         return result;
     }
 
-    private void unZstd(InputStream inputStream, OutputStream outputStream) throws IOException {
+    private void unSnappy(InputStream inputStream, OutputStream outputStream) throws IOException {
 
-        ZstdInputStream zstdInputStream = new ZstdInputStream(inputStream);
+        SnappyInputStream snappyInputStream = new SnappyInputStream(inputStream);
 
         byte[] buffer = new byte[512];
 
         int bytesRead;
 
-        while ((bytesRead = zstdInputStream.read(buffer)) > -1) {
+        while ((bytesRead = snappyInputStream.read(buffer)) > -1) {
             outputStream.write(buffer, 0, bytesRead);
         }
 
-        zstdInputStream.close();
+        snappyInputStream.close();
     }
 }

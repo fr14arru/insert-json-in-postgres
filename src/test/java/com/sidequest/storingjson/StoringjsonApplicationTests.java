@@ -1,13 +1,16 @@
 package com.sidequest.storingjson;
 
 import com.sidequest.storingjson.domain.User;
-import com.sidequest.storingjson.services.JsonEntityByteArrayCompressedService;
+import com.sidequest.storingjson.services.JsonEntityByteArrayCompressedGzipService;
+import com.sidequest.storingjson.services.JsonEntityByteArrayCompressedLz4Service;
+import com.sidequest.storingjson.services.JsonEntityByteArrayCompressedZstdService;
+import com.sidequest.storingjson.services.JsonEntityByteArrayService;
 import com.sidequest.storingjson.services.JsonEntityJsonService;
 import com.sidequest.storingjson.services.JsonEntityJsonbService;
 import com.sidequest.storingjson.services.JsonEntityRawTextService;
-import com.sidequest.storingjson.services.JsonEntityByteArrayService;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +63,13 @@ class StoringjsonApplicationTests {
     JsonEntityByteArrayService jsonEntityByteArrayService;
 
     @Autowired
-    JsonEntityByteArrayCompressedService jsonEntityByteArrayCompressedService;
+    JsonEntityByteArrayCompressedGzipService jsonEntityByteArrayCompressedGzipService;
+
+    @Autowired
+    JsonEntityByteArrayCompressedLz4Service jsonEntityByteArrayCompressedLz4Service;
+
+    @Autowired
+    JsonEntityByteArrayCompressedZstdService jsonEntityByteArrayCompressedZstdService;
 
     @Test
     void test_saveAll10000JsonEntitiesRawText() {
@@ -95,11 +104,35 @@ class StoringjsonApplicationTests {
     }
 
     @Test
-    void test_saveAll10000JsonEntitiesByteArrayCompressed() {
+    void test_saveAll10000JsonEntitiesByteArrayCompressedGzip() {
 
         List<User> users = buildUsers(100000);
 
-        jsonEntityByteArrayCompressedService.saveAllRawTextByteArrayCompressed(users);
+        jsonEntityByteArrayCompressedGzipService.saveAllRawTextByteArrayCompressed(users);
+
+        List<User> usersResult = jsonEntityByteArrayCompressedGzipService.findAll();
+
+        Assertions.assertNotNull(usersResult);
+    }
+
+    @Test
+    void test_saveAll10000JsonEntitiesByteArrayCompressedLz4() {
+
+        List<User> users = buildUsers(100000);
+
+        jsonEntityByteArrayCompressedLz4Service.saveAllRawTextByteArrayCompressedLz4(users);
+    }
+
+    @Test
+    void test_saveAll10000JsonEntitiesByteArrayCompressedZstd() {
+
+        List<User> users = buildUsers(100000);
+
+        jsonEntityByteArrayCompressedZstdService.saveAllRawTextByteArrayCompressedZstd(users);
+
+        List<User> usersResult = jsonEntityByteArrayCompressedZstdService.findAll();
+
+        Assertions.assertNotNull(usersResult);
     }
 
     private List<User> buildUsers(Integer limit) {

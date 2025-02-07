@@ -36,13 +36,13 @@ public class JsonEntityByteArrayCompressedGzipService {
 
         users.forEach(user -> {
 
-            try (
-                    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(JSON.toJSONBytes(user));
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(JSON.toJSONBytes(user));
+                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
 
                 gzip(byteArrayInputStream, byteArrayOutputStream);
 
-                JsonEntityByteArrayCompressedGzip jsonEntityByteArrayCompressedGzip = new JsonEntityByteArrayCompressedGzip();
+                JsonEntityByteArrayCompressedGzip jsonEntityByteArrayCompressedGzip =
+                        new JsonEntityByteArrayCompressedGzip();
                 jsonEntityByteArrayCompressedGzip.setJson(byteArrayOutputStream.toByteArray());
 
                 entities.add(jsonEntityByteArrayCompressedGzip);
@@ -61,8 +61,6 @@ public class JsonEntityByteArrayCompressedGzipService {
 
         long startTime = System.currentTimeMillis();
 
-        log.info("Starting to store {} random bytearray compressed gzip objects", entities.size());
-
         jsonEntityByteArrayCompressedGzipRepository.saveAll(entities);
 
         long endTime = System.currentTimeMillis();
@@ -72,10 +70,14 @@ public class JsonEntityByteArrayCompressedGzipService {
         log.info("Finished storing {} random bytearray compressed gzip objects in {} milliseconds", entities.size(), resultTime);
     }
 
-    public static void gzip(InputStream is, OutputStream os) throws IOException {
-        GZIPOutputStream gzipOs = new GZIPOutputStream(os);
-        byte[] allBytes = is.readAllBytes();
+    private void gzip(InputStream inputStream, OutputStream outputStream) throws IOException {
+
+        GZIPOutputStream gzipOs = new GZIPOutputStream(outputStream);
+
+        byte[] allBytes = inputStream.readAllBytes();
+
         gzipOs.write(allBytes, 0, allBytes.length);
+
         gzipOs.close();
     }
 
@@ -83,9 +85,19 @@ public class JsonEntityByteArrayCompressedGzipService {
 
         List<User> result = new ArrayList<>();
 
+        long startTimeQuery = System.currentTimeMillis();
+
         List<JsonEntityByteArrayCompressedGzip> entities = jsonEntityByteArrayCompressedGzipRepository.findAll();
 
-        for (JsonEntityByteArrayCompressedGzip entity : entities) {
+        long endTimeQuery = System.currentTimeMillis();
+
+        long resultTimeQuery = endTimeQuery - startTimeQuery;
+
+        log.info("Time querying {} random bytearray compressed gzip objects in {} milliseconds", entities.size(), resultTimeQuery);
+
+        long startTimeMappingEntities = System.currentTimeMillis();
+
+        entities.forEach(entity -> {
 
             try (ByteArrayInputStream bais = new ByteArrayInputStream(entity.getJson());
                  ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
@@ -101,20 +113,32 @@ public class JsonEntityByteArrayCompressedGzipService {
                 result.add(user);
 
             } catch (IOException e) {
+
                 throw new RuntimeException("Error decompressing user data", e);
             }
-        }
+        });
+
+        long endTimeMappingEntities = System.currentTimeMillis();
+
+        long resultTimeMappingEntities = endTimeMappingEntities - startTimeMappingEntities;
+
+        log.info("Time mapping {} random bytearray compressed gzip objects in {} milliseconds", entities.size(), resultTimeMappingEntities);
 
         return result;
     }
 
-    public static void unzip(InputStream is, OutputStream os) throws IOException {
-        GZIPInputStream gzipIs = new GZIPInputStream(is);
+    private static void unzip(InputStream inputStream, OutputStream outputStream) throws IOException {
+
+        GZIPInputStream gzipIs = new GZIPInputStream(inputStream);
+
         byte[] buffer = new byte[512];
+
         int bytesRead;
+
         while ((bytesRead = gzipIs.read(buffer)) > -1) {
-            os.write(buffer, 0, bytesRead);
+            outputStream.write(buffer, 0, bytesRead);
         }
+
         gzipIs.close();
     }
 }

@@ -12,8 +12,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "json_entity_byte_array_compressed")
-public class JsonEntityByteArrayCompressed {
+@Table(name = "json_entity_byte_array_compressed_gzip")
+public class JsonEntityByteArrayCompressedGzip {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
